@@ -1,6 +1,5 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Heart } from "lucide-react";
 
 type Product = {
   id: number;
@@ -44,10 +43,6 @@ export default function ProductCard({ product }: ProductCardProps) {
             ₹{product.price}
           </p>
         </div>
-
-        <button className="mt-1 rounded-full p-1 hover:bg-stone-100">
-          <Heart size={18} />
-        </button>
       </div>
     </Link>
   );
