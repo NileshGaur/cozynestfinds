@@ -20,7 +20,7 @@ export default function ProductCard({ product }: ProductCardProps) {
       href={`/product/${product.slug}`}
       className="group overflow-hidden rounded-xl border border-stone-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-md"
     >
-      <div className="relative h-64 overflow-hidden bg-stone-100">
+      <div className="relative h-72 overflow-hidden bg-stone-100">
         <Image
           src={product.image}
           alt={product.title}
