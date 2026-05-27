@@ -32,12 +32,15 @@ const categories = [
 
 const getPriceNumber = (price: string) => Number(price.replace(/[^\d]/g, ""));
 
+const ITEMS_PER_PAGE = 12;
+
 export default function ProductExplorer({ products }: ProductExplorerProps) {
   const [activeCategory, setActiveCategory] = useState("All");
   const [sortBy, setSortBy] = useState("newest");
   const [priceRange, setPriceRange] = useState("all");
   const [productType, setProductType] = useState("all");
   const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
 
   const filteredProducts = useMemo(() => {
     let result = [...products];
@@ -79,6 +82,21 @@ export default function ProductExplorer({ products }: ProductExplorerProps) {
     return result;
   }, [products, activeCategory, sortBy, priceRange, productType]);
 
+  const totalPages = Math.ceil(filteredProducts.length / ITEMS_PER_PAGE);
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const paginatedProducts = filteredProducts.slice(
+    startIndex,
+    startIndex + ITEMS_PER_PAGE,
+  );
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    const productsSection = document.getElementById("products");
+    if (productsSection) {
+      productsSection.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   const appliedFilters = [
     activeCategory !== "All" ? activeCategory : null,
     priceRange !== "all" ? getPriceLabel(priceRange) : null,
@@ -91,6 +109,7 @@ export default function ProductExplorer({ products }: ProductExplorerProps) {
     setSortBy("newest");
     setPriceRange("all");
     setProductType("all");
+    setCurrentPage(1);
   };
 
   return (
@@ -150,11 +169,57 @@ export default function ProductExplorer({ products }: ProductExplorerProps) {
       </div>
 
       {filteredProducts.length > 0 ? (
-        <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {filteredProducts.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
-        </div>
+        <>
+          <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            {paginatedProducts.map((product) => (
+              <ProductCard key={product.id} product={product} />
+            ))}
+          </div>
+
+          {totalPages > 1 && (
+            <div className="mt-12 flex items-center justify-center gap-2">
+              <button
+                onClick={() => handlePageChange(currentPage - 1)}
+                disabled={currentPage === 1}
+                className="rounded-lg border border-stone-300 bg-white px-4 py-2 text-sm font-semibold text-stone-700 transition disabled:opacity-50 hover:enabled:bg-stone-50"
+              >
+                Previous
+              </button>
+
+              <div className="flex gap-1">
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map(
+                  (page) => (
+                    <button
+                      key={page}
+                      onClick={() => handlePageChange(page)}
+                      className={`rounded-lg px-3 py-2 text-sm font-semibold transition ${
+                        currentPage === page
+                          ? "border-[#5b3218] bg-[#5b3218] text-white"
+                          : "border border-stone-300 bg-white text-stone-700 hover:border-stone-400"
+                      }`}
+                    >
+                      {page}
+                    </button>
+                  ),
+                )}
+              </div>
+
+              <button
+                onClick={() => handlePageChange(currentPage + 1)}
+                disabled={currentPage === totalPages}
+                className="rounded-lg border border-stone-300 bg-white px-4 py-2 text-sm font-semibold text-stone-700 transition disabled:opacity-50 hover:enabled:bg-stone-50"
+              >
+                Next
+              </button>
+            </div>
+          )}
+
+          <div className="mt-6 text-center text-sm text-stone-600">
+            Showing {startIndex + 1} -{" "}
+            {Math.min(startIndex + ITEMS_PER_PAGE, filteredProducts.length)} of{" "}
+            {filteredProducts.length} products
+          </div>
+        </>
       ) : (
         <div className="mt-10 rounded-xl border border-stone-200 bg-white px-6 py-12 text-center">
           <h3 className="font-serif text-3xl">No products found</h3>
@@ -256,7 +321,10 @@ export default function ProductExplorer({ products }: ProductExplorerProps) {
               </button>
 
               <button
-                onClick={() => setIsFilterOpen(false)}
+                onClick={() => {
+                  setIsFilterOpen(false);
+                  setCurrentPage(1);
+                }}
                 className="flex-1 rounded-lg bg-[#5b3218] px-5 py-3 text-sm font-bold text-white"
               >
                 Show {filteredProducts.length} Finds

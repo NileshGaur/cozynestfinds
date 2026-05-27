@@ -1,3 +1,6 @@
+"use client";
+
+import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -15,17 +18,23 @@ type ProductCardProps = {
 };
 
 export default function ProductCard({ product }: ProductCardProps) {
+  const [isImageLoading, setIsImageLoading] = useState(true);
+
   return (
     <Link
       href={`/product/${product.slug}`}
       className="group overflow-hidden rounded-xl border border-stone-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-md"
     >
-      <div className="relative h-94 overflow-hidden bg-stone-100">
+      <div className="relative h-96 overflow-hidden bg-stone-100">
+        {isImageLoading && (
+          <div className="absolute inset-0 z-10 animate-pulse bg-stone-200" />
+        )}
         <Image
           src={product.image}
           alt={product.title}
           fill
           className="object-cover object-top transition duration-500 group-hover:scale-110"
+          onLoad={() => setIsImageLoading(false)}
         />
       </div>
 

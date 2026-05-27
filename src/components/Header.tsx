@@ -6,6 +6,7 @@ import { Search } from "lucide-react";
 import { useEffect, useState } from "react";
 
 import { supabase } from "../lib/supabase";
+import { PageTransitionLoader } from "./PageLoader";
 
 type SearchProduct = {
   id: number;
@@ -59,7 +60,9 @@ export default function Header() {
   };
 
   return (
-    <header className="sticky top-0 z-50 border-b border-stone-200 bg-[#fbf8f3]/90 backdrop-blur">
+    <>
+      <PageTransitionLoader />
+      <header className="sticky top-0 z-50 border-b border-stone-200 bg-[#fbf8f3]/90 backdrop-blur">
       <div className="mx-auto flex h-20 max-w-7xl items-center justify-between gap-6 px-6">
         <Link href="/" className="leading-none">
           <div className="font-serif text-3xl text-stone-950">CozyNest</div>
@@ -134,5 +137,6 @@ export default function Header() {
         </div>
       </div>
     </header>
+    </>
   );
 }
