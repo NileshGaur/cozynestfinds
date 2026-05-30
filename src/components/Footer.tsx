@@ -13,12 +13,6 @@ export default function Footer() {
           <p className="mt-4 max-w-xs text-sm leading-6 text-stone-600">
             Finds that make your space warmer and your life simpler.
           </p>
-
-          <div className="mt-5 flex gap-4 text-stone-800">
-            <Mail size={18} />
-            <Music2 size={18} />
-            <Mail size={18} />
-          </div>
         </div>
 
         <div>
@@ -27,16 +21,6 @@ export default function Footer() {
             <Link href="/">Home</Link>
             <Link href="#">Shop All</Link>
             <Link href="/about">About</Link>
-          </div>
-        </div>
-
-        <div>
-          <h4 className="font-bold text-stone-950">Categories</h4>
-          <div className="mt-4 flex flex-col gap-3 text-sm text-stone-600">
-            <Link href="#">Bedroom</Link>
-            <Link href="#">Living Room</Link>
-            <Link href="#">Kitchen</Link>
-            <Link href="#">Decor</Link>
           </div>
         </div>
 
